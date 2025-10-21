@@ -1,20 +1,57 @@
-Project  Description:
+clc;
+clear;
+close all;
 
-This Project analyzes a dataset of student exam scores using MATLAB. It calculates key statistics for Math, Reading, and Writing scores and visualizes the data using different plots to analyze performance trend. It enables users to observe class performance efficiently.  
+%upload file
+filename="StudentsPerformance.csv"; %filename
 
-How to run the Script
+if isfile(filename)
+    data=readtable(filename);
+else
+    error('Dataset not found. Make sure %s is in the current folder.', filename)
+end
 
-1 Download dataset
-  Go to Kaggle to download students performance in Exams dataset.
-  Download .csv file and save it in the same folder as the MATLAB script
+%% Display few rows data
+disp("first 5 rows of the dataset;");
+disp(data(1:5,:));
 
-2 Open MATLAB
-  Launch MATLAB and navigate to the folder containing the script and dataset
-3 Run the Script
-  In the MATLAB Command window type
-  student_performance-analysis
-  Press Enter to execute
+%%%% Columns of interest (mathScore    readingScore    writingScore)
 
-Analysis Conducted
+scores={'mathScore',   'readingScore',    'writingScore'};           %%%Table variable names
 
-Student exams score data is analyzed using the script generated. It calculates Mean, Median and Standard Deviation for Maths Reading and Writing Score and visualizes the data with histogram and box plots.
+
+for i= 1:length(scores)
+    col= scores{i};
+    vec=data.(col);        %%% Access table Column correctly
+
+    mean_val=mean(vec);
+    median_val=median(vec);
+    std_val=std(vec);
+
+%%%% Visualization  %%Histrogram   %%boxplots
+
+%Histrogram
+ 
+figure('Name', col, 'NumberTitle', 'off')
+
+subplot(1,2,1);
+h=histogram(vec);
+title([col '  Histogram']);
+xlabel('Score');
+ylabel('Count');
+
+
+%%Box Plot
+subplot(1,2,2);
+b=boxplot(vec);
+title([col '   Box Plot'])
+
+
+%%%%%%%%Display Results
+
+fprintf('\nStatistics for %s:\n', col)
+fprintf('Mean: %.2f\n', mean_val)
+fprintf('Median: %.2f\n', median_val)
+fprintf('standard Deviation: %2f\n', std_val)
+
+end
